@@ -78,7 +78,7 @@ function Portfolio() {
       const fetcher = await get(addressSocket, {
         scope: ["charts"],
         payload: {
-          address: account | "0x5130049EFC9faA0671f0fD1c4e17d54E4b9a193b",
+          address: `${account}`,
           currency: "usd",
           charts_max_assets: 0,
           charts_min_percentage: 100,
@@ -91,7 +91,7 @@ function Portfolio() {
       await setDataset(result.payload.charts.others);
     }
     fetcher();
-  }, []);
+  }, [account]);
 
   let _timeStamps = [];
   let _values = [];
@@ -125,7 +125,7 @@ function Portfolio() {
                 yAxisKey: "0",
               },
               backgroundColor: ["rgba(0, 99, 232, 0.6)"],
-              showLine: "false",
+              showLine: "true",
               fill: {
                 target: "origin",
                 above: "rgba(0, 80, 250, 0.4)", // Area will be red above the origin
