@@ -185,8 +185,8 @@ function Portfolio() {
 
   useEffect(() => {
     dataset.map(separator);
-    setTimeStamps(_timeStamps);
-    setValues(_values);
+    setTimeStamps(_timeStamps.reverse());
+    setValues(_values.reverse());
   }, [dataset]);
 
   if (isLoading) {
