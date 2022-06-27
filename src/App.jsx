@@ -23,6 +23,7 @@ import NativeBalance from "components/NativeBalance";
 import "./style.css";
 import Text from "antd/lib/typography/Text";
 import MenuItems from "./components/MenuItems";
+import { useUserState } from "./global-state/userState";
 const { Header, Sider, Content } = Layout;
 
 const styles = {
@@ -80,14 +81,18 @@ const App = () => {
     authError,
   } = useMoralis();
 
+  const userState = useUserState();
+
   useEffect(() => {
     const connectorId = window.localStorage.getItem("connectorId");
+    // This is an example we will be getting authentication data with web3 or ethers in future
+    userState.setIsUserLoggedIn(isAuthenticated);
     if (isAuthenticated && !isWeb3Enabled && !isWeb3EnableLoading)
       enableWeb3({ provider: connectorId });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, isWeb3Enabled]);
 
-  if (!isAuthenticated) {
+  if (!userState.isUserLoggedIn) {
     return (
       <Layout className="fade" style={styles.bglogin}>
         <SignIn />
