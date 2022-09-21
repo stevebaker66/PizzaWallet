@@ -22,6 +22,9 @@ import "./style.css";
 import MenuItems from "./components/MenuItems";
 import PizzaWalletLogo from "./assets/pizza-wallet-logo.svg";
 import styled from "styled-components";
+let Web3 = require("web3");
+
+declare var window: any;
 
 const { Header, Sider, Content } = Layout;
 
@@ -122,7 +125,7 @@ const App = () => {
   } = useMoralis();
 
   const [collapsedSideBar, setCollapsedSideBar] = useState(false);
-  // const [viewSwitched, setViewSwitched] = useState(false);
+  const [web3, setWeb3] = useState(null);
 
   useEffect(() => {
     type Web3ProviderType = any;
@@ -141,10 +144,36 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, isWeb3Enabled]);
 
+  const connectWallet = () => {
+    window.ethereum
+      ? window.ethereum
+          .request({ method: "eth_requestAccounts" })
+          .then((accounts: string[]) => {
+            console.log("accounts - ", accounts[0]);
+            let w3 = new Web3(window.ethereum);
+            setWeb3(w3);
+          })
+          .catch((err: any) => console.log(err))
+      : console.log("Please install MetaMask");
+  };
+
+  const getTokenList = async () => {
+    const response = await fetch(
+      "https://tokens.coingecko.com/uniswap/all.json",
+    );
+    let actualData = await response.json();
+
+    console.log("response here - ", actualData.tokens);
+  };
+
+  console.log("web3 here - ", web3);
+
   if (!isAuthenticated) {
     return (
       <LoginLayout>
         <SignIn />
+        <button onClick={getTokenList}>Get token list</button>
+        <button onClick={connectWallet}>Web3 sign-in</button>
       </LoginLayout>
     );
   } else {
